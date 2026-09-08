@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { BasicInfoPage } from './BasicInfoPage'
+import { BusinessInfoPage } from './BusinessInfoPage'
 import { OverviewPage } from './OverviewPage'
 import { aggregateRegions, sortByCompletionRate } from './overviewModel'
 
@@ -8,6 +10,22 @@ function getMetricCard(label: string) {
 }
 
 describe('dashboard pages', () => {
+  it('可按关键字筛选基地', () => {
+    render(<BasicInfoPage onNavigate={vi.fn()} />)
+    fireEvent.change(screen.getByRole('searchbox', { name: '搜索基地' }), {
+      target: { value: '医疗' },
+    })
+    expect(screen.getByText('华南智慧医疗AI中试基地')).toBeInTheDocument()
+    expect(screen.queryByText('华东智能制造AI中试基地')).not.toBeInTheDocument()
+  })
+
+  it('展示经营收入完成度与算力结构', () => {
+    render(<BusinessInfoPage selectedBaseId="base-002" />)
+    expect(screen.getByText('收入完成度')).toBeInTheDocument()
+    expect(screen.getByText('算力结构')).toBeInTheDocument()
+    expect(screen.getByText('预期剩余收入')).toBeInTheDocument()
+  })
+
   it('展示 8 个经过计算的总览决策指标', () => {
     const { container } = render(<OverviewPage onNavigate={vi.fn()} />)
 

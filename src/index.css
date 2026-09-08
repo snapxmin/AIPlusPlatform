@@ -127,9 +127,22 @@ body {
 
 .app-nav button:focus-visible,
 button:focus-visible,
-select:focus-visible {
+select:focus-visible,
+input:focus-visible {
   outline: 3px solid rgba(21, 137, 168, 0.35);
   outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .app-sidebar__footer {
@@ -338,15 +351,360 @@ table.data-table tbody tr:hover {
 }
 
 .base-selector {
-  margin-bottom: 16px;
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .base-selector select {
-  padding: 6px 10px;
-  border-radius: 6px;
+  min-width: 280px;
+  padding: 9px 34px 9px 11px;
+  color: var(--text);
+  background: var(--surface);
   border: 1px solid var(--color-border);
+  border-radius: 8px;
   font-size: 13px;
-  min-width: 240px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.filter-bar select,
+.search-field {
+  height: 38px;
+  color: var(--text);
+  background: #fafbfd;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.filter-bar select {
+  min-width: 140px;
+  padding: 0 32px 0 11px;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 220px;
+  padding: 0 11px;
+  color: var(--muted);
+}
+
+.search-field input {
+  width: 100%;
+  height: 100%;
+  padding: 0 0 0 9px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.filter-result {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.base-card-list {
+  display: grid;
+  gap: 16px;
+}
+
+.base-info-card + .base-info-card {
+  margin-top: 0;
+}
+
+.base-info-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.base-info-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff 65%, var(--primary-soft));
+  border-bottom: 1px solid var(--border);
+}
+
+.base-info-card__header h2,
+.business-identity h2 {
+  margin: 6px 0;
+  font-size: 19px;
+}
+
+.base-info-card__header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.base-info-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.base-info-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.base-info-card__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+  gap: 0;
+}
+
+.base-info-section {
+  padding: 18px 20px;
+}
+
+.base-info-section + .base-info-section {
+  border-left: 1px solid var(--border);
+}
+
+.base-info-section h3 {
+  margin: 0 0 13px;
+  font-size: 13px;
+}
+
+.base-info-section .link-button {
+  margin-top: 14px;
+}
+
+.base-info-section--partners {
+  border-top: 1px solid var(--border);
+}
+
+.base-info-section--partners + .base-info-section {
+  border-left: 0;
+}
+
+.info-definitions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+  margin: 0;
+}
+
+.info-definitions div {
+  min-width: 0;
+}
+
+.info-definitions dt {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.info-definitions dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 140px;
+  color: var(--muted);
+}
+
+.business-identity {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto minmax(220px, 1fr);
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.business-identity__eyebrow {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.business-levels {
+  display: flex;
+  gap: 10px;
+}
+
+.business-levels span {
+  display: grid;
+  gap: 4px;
+  min-width: 86px;
+  padding: 9px 12px;
+  color: var(--muted);
+  background: #fafbfd;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.business-levels strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.opportunity-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.opportunity-tag {
+  padding: 6px 9px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.business-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.business-analysis {
+  margin-bottom: 16px;
+}
+
+.business-analysis + .business-analysis {
+  margin-top: 0;
+}
+
+.business-analysis__heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.business-analysis__heading .card-title {
+  margin-bottom: 5px;
+}
+
+.business-analysis__heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.business-analysis__heading > strong {
+  color: var(--primary);
+  font-size: 24px;
+}
+
+.revenue-progress,
+.computing-stack {
+  display: flex;
+  height: 10px;
+  margin-top: 16px;
+  overflow: hidden;
+  background: #edf1f6;
+  border-radius: 999px;
+}
+
+.revenue-progress span {
+  display: block;
+  background: linear-gradient(90deg, var(--primary), #ef5962);
+  border-radius: inherit;
+}
+
+.computing-stack {
+  height: 14px;
+}
+
+.computing-stack__self,
+.legend-dot--self {
+  background: var(--primary);
+}
+
+.computing-stack__leased,
+.legend-dot--leased {
+  background: var(--cyan);
+}
+
+.computing-stack__ascend,
+.legend-dot--ascend {
+  background: var(--warning);
+}
+
+.computing-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.computing-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.computing-legend strong {
+  color: var(--text);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.business-breakdowns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.business-breakdowns .card + .card {
+  margin-top: 0;
+}
+
+.breakdown-totals {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.breakdown-totals strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--text);
+  font-size: 15px;
 }
 
 .grid-2 {
@@ -788,6 +1146,40 @@ table.data-table tbody tr:hover {
     grid-template-columns: 1fr;
   }
 
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .search-field {
+    flex-basis: 100%;
+  }
+
+  .filter-result {
+    margin-left: 0;
+  }
+
+  .base-info-card__body,
+  .business-identity {
+    grid-template-columns: 1fr;
+  }
+
+  .base-info-section + .base-info-section {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .opportunity-list {
+    justify-content: flex-start;
+  }
+
+  .business-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-breakdowns {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard-grid--metrics,
   .dashboard-grid--charts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -807,6 +1199,55 @@ table.data-table tbody tr:hover {
   .summary-cards {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+  }
+
+  .page-actions,
+  .base-selector,
+  .base-selector select {
+    width: 100%;
+  }
+
+  .base-selector select {
+    min-width: 0;
+  }
+
+  .filter-bar select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .filter-result {
+    flex-basis: 100%;
+  }
+
+  .base-info-card__header {
+    flex-direction: column;
+  }
+
+  .base-info-card__badges {
+    justify-content: flex-start;
+  }
+
+  .info-definitions,
+  .business-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .business-levels {
+    flex-wrap: wrap;
+  }
+
+  .business-levels span {
+    flex: 1;
+  }
+
+  .business-analysis__heading {
+    align-items: flex-start;
+  }
+
+  .computing-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-grid--metrics,
