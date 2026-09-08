@@ -1,7 +1,9 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { ActivitiesPage } from './ActivitiesPage'
 import { BasicInfoPage } from './BasicInfoPage'
 import { BusinessInfoPage } from './BusinessInfoPage'
+import { NewsPage } from './NewsPage'
 import { OverviewPage } from './OverviewPage'
 import { aggregateRegions, sortByCompletionRate } from './overviewModel'
 
@@ -202,5 +204,39 @@ describe('dashboard pages', () => {
       'aria-valuenow',
       '44.107744107744104',
     )
+  })
+
+  it('切换三大关键活动视图', () => {
+    render(<ActivitiesPage />)
+    fireEvent.click(screen.getByRole('tab', { name: '中试平台' }))
+    expect(screen.getByText('参考架构覆盖')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: '关键生态活动' }))
+    expect(screen.getByText('华东智能制造AI中试基地启动会')).toBeInTheDocument()
+  })
+
+  it('为活动标签页和场景筛选提供可访问状态', () => {
+    render(<ActivitiesPage />)
+    expect(screen.getByRole('tablist', { name: '关键活动视图' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: '场景全景图' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+    fireEvent.click(screen.getByRole('button', { name: '华为重点' }))
+    expect(screen.queryByText('农业遥感监测')).not.toBeInTheDocument()
+  })
+
+  it('按分类筛选动态资讯', () => {
+    render(<NewsPage />)
+    fireEvent.click(screen.getByRole('button', { name: '行业动态' }))
+    expect(screen.getByText('智能制造行业AI质检渗透率持续提升')).toBeInTheDocument()
+    expect(screen.queryByText('多地发布算力券补贴政策')).not.toBeInTheDocument()
+  })
+
+  it('以可访问资讯门户展示分类状态和文章', () => {
+    const { container } = render(<NewsPage />)
+    expect(screen.getByRole('button', { name: '全部' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getAllByRole('article')).toHaveLength(8)
+    expect(container.querySelectorAll('.news-featured')).toHaveLength(1)
+    expect(screen.getByText('2024年9月1日')).toBeInTheDocument()
   })
 })
