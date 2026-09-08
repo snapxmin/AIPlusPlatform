@@ -13,6 +13,25 @@ describe('App', () => {
     expect(screen.getByText('华东智能制造AI中试基地')).toBeInTheDocument()
   })
 
+  it('移动端品牌条在导航之前', () => {
+    render(<App />)
+    const mobileBrand = screen.getByText('AI 中试基地').closest('.mobile-brand')
+    expect(mobileBrand?.nextElementSibling).toBe(screen.getByRole('navigation'))
+  })
+
+  it('用 aria-current 标记当前菜单', () => {
+    render(<App />)
+    const overview = screen.getByRole('button', { name: '看板总览' })
+    const basic = screen.getByRole('button', { name: '基础信息' })
+
+    expect(overview).toHaveAttribute('aria-current', 'page')
+    expect(basic).not.toHaveAttribute('aria-current')
+
+    fireEvent.click(basic)
+    expect(overview).not.toHaveAttribute('aria-current')
+    expect(basic).toHaveAttribute('aria-current', 'page')
+  })
+
   it('可以通过导航栏切换到基础信息页', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: '基础信息' }))

@@ -29,7 +29,11 @@ export function Nav({ current, onNavigate }: NavProps) {
       <ul className="app-nav">
         {NAV_ITEMS.map((item) => (
           <li key={item.key} className={item.key === current ? 'active' : undefined}>
-            <button type="button" onClick={() => onNavigate(item.key)}>
+            <button
+              type="button"
+              aria-current={item.key === current ? 'page' : undefined}
+              onClick={() => onNavigate(item.key)}
+            >
               <Icon name={navIcons[item.key]} size={19} />
               {item.label}
             </button>

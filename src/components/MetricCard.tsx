@@ -34,7 +34,7 @@ export function MetricCard({
           <Icon name={icon} size={22} />
         </div>
       </div>
-      {detail && <div className="metric-card__detail">{detail}</div>}
+      {detail !== undefined && <div className="metric-card__detail">{detail}</div>}
       {normalizedProgress !== undefined && (
         <div
           className="metric-card__progress"

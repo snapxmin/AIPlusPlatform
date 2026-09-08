@@ -19,14 +19,14 @@ function App() {
 
   return (
     <div className="app-shell">
+      <div className="mobile-brand">
+        <span className="mobile-brand__mark">
+          <Icon name="building" size={20} />
+        </span>
+        <span>AI 中试基地</span>
+      </div>
       <Nav current={page} onNavigate={(key) => handleNavigate(key)} />
       <div className="app-workspace">
-        <div className="mobile-brand">
-          <span className="mobile-brand__mark">
-            <Icon name="building" size={20} />
-          </span>
-          <span>AI 中试基地</span>
-        </div>
         <div className="app-updated">
           <span>数据更新于</span>
           <time dateTime="2026-03-01T09:00:00+08:00">2026-03-01 09:00</time>
