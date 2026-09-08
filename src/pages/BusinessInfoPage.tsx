@@ -22,9 +22,11 @@ export function BusinessInfoPage({ selectedBaseId }: BusinessInfoPageProps) {
     !business || business.expectedRevenueAnnualWan === 0
       ? 0
       : (business.revenueCompleted.annualWan / business.expectedRevenueAnnualWan) * 100
-  const computingTotal = business
-    ? business.selfBuiltP + business.leasedP + business.ascendScaleP
-    : 0
+  const revenueRateLabel = `${revenueRate.toFixed(1)}%`
+  const ascendCoverageRate =
+    !business || business.actualComputingPowerP === 0
+      ? 0
+      : (business.ascendScaleP / business.actualComputingPowerP) * 100
 
   return (
     <div>
@@ -82,7 +84,7 @@ export function BusinessInfoPage({ selectedBaseId }: BusinessInfoPageProps) {
               value={formatWan(business.revenueCompleted.annualWan)}
               icon="check"
               tone="success"
-              detail={`收入完成度 ${formatPercent(revenueRate / 100)}`}
+              detail={`收入完成度 ${revenueRateLabel}`}
               progress={revenueRate}
             />
             <MetricCard
@@ -107,7 +109,7 @@ export function BusinessInfoPage({ selectedBaseId }: BusinessInfoPageProps) {
                 <div className="card-title">收入完成度</div>
                 <p>年度收入已完成 {formatWan(business.revenueCompleted.annualWan)}</p>
               </div>
-              <strong>{formatPercent(revenueRate / 100)}</strong>
+              <strong>{revenueRateLabel}</strong>
             </div>
             <div
               className="revenue-progress"
@@ -126,21 +128,41 @@ export function BusinessInfoPage({ selectedBaseId }: BusinessInfoPageProps) {
             <div
               className="computing-stack"
               role="img"
-              aria-label={`自建 ${business.selfBuiltP}P，租赁 ${business.leasedP}P，昇腾 ${business.ascendScaleP}P`}
+              aria-label={`实际算力结构：自建 ${business.selfBuiltP}P，租赁 ${business.leasedP}P，总计 ${business.actualComputingPowerP}P`}
             >
-              {computingTotal > 0 && (
+              {business.actualComputingPowerP > 0 && (
                 <>
-                  <span className="computing-stack__self" style={{ width: `${business.selfBuiltP / computingTotal * 100}%` }} />
-                  <span className="computing-stack__leased" style={{ width: `${business.leasedP / computingTotal * 100}%` }} />
-                  <span className="computing-stack__ascend" style={{ width: `${business.ascendScaleP / computingTotal * 100}%` }} />
+                  <span className="computing-stack__self" style={{ width: `${business.selfBuiltP / business.actualComputingPowerP * 100}%` }} />
+                  <span className="computing-stack__leased" style={{ width: `${business.leasedP / business.actualComputingPowerP * 100}%` }} />
                 </>
               )}
             </div>
             <div className="computing-legend">
               <span><i className="legend-dot legend-dot--self" />自建 <strong>{formatComputingPower(business.selfBuiltP)}</strong></span>
               <span><i className="legend-dot legend-dot--leased" />租赁 <strong>{formatComputingPower(business.leasedP)}</strong></span>
-              <span><i className="legend-dot legend-dot--ascend" />昇腾 <strong>{formatComputingPower(business.ascendScaleP)}</strong></span>
               <span>实际算力 <strong>{formatComputingPower(business.actualComputingPowerP)}</strong></span>
+            </div>
+            <div className="ascend-coverage">
+              <div className="ascend-coverage__heading">
+                <div>
+                  <strong>昇腾覆盖实际算力</strong>
+                  <span>
+                    {formatComputingPower(business.ascendScaleP)} /{' '}
+                    {formatComputingPower(business.actualComputingPowerP)}
+                  </span>
+                </div>
+                <strong>{ascendCoverageRate.toFixed(1)}%</strong>
+              </div>
+              <div
+                className="ascend-coverage__progress"
+                role="progressbar"
+                aria-label="昇腾覆盖实际算力"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={ascendCoverageRate}
+              >
+                <span style={{ width: `${Math.min(ascendCoverageRate, 100)}%` }} />
+              </div>
             </div>
           </section>
 

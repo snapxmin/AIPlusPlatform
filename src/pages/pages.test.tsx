@@ -6,7 +6,10 @@ import { OverviewPage } from './OverviewPage'
 import { aggregateRegions, sortByCompletionRate } from './overviewModel'
 
 function getMetricCard(label: string) {
-  return screen.getByText(label).closest('.metric-card') as HTMLElement
+  return screen
+    .getAllByText(label)
+    .find((element) => element.closest('.metric-card'))
+    ?.closest('.metric-card') as HTMLElement
 }
 
 describe('dashboard pages', () => {
@@ -19,11 +22,75 @@ describe('dashboard pages', () => {
     expect(screen.queryByText('华东智能制造AI中试基地')).not.toBeInTheDocument()
   })
 
+  it('可组合批复状态与行业筛选基地', () => {
+    render(<BasicInfoPage onNavigate={vi.fn()} />)
+    fireEvent.change(screen.getByRole('combobox', { name: '筛选批复状态' }), {
+      target: { value: '已批复' },
+    })
+    fireEvent.change(screen.getByRole('combobox', { name: '筛选行业' }), {
+      target: { value: '智慧医疗' },
+    })
+
+    expect(screen.getByText('华南智慧医疗AI中试基地')).toBeInTheDocument()
+    expect(screen.queryByText('华东智能制造AI中试基地')).not.toBeInTheDocument()
+  })
+
+  it('筛选无匹配基地时展示空状态', () => {
+    render(<BasicInfoPage onNavigate={vi.fn()} />)
+    fireEvent.change(screen.getByRole('searchbox', { name: '搜索基地' }), {
+      target: { value: '不存在的基地' },
+    })
+
+    expect(screen.getByText('未找到符合条件的基地')).toBeInTheDocument()
+  })
+
+  it('从基础信息页下钻时传入当前基地 ID', () => {
+    const onNavigate = vi.fn()
+    render(<BasicInfoPage onNavigate={onNavigate} />)
+    const baseCard = screen.getByText('华南智慧医疗AI中试基地').closest('article') as HTMLElement
+
+    fireEvent.click(within(baseCard).getByRole('button', { name: '查看昇腾规模及经营信息 →' }))
+
+    expect(onNavigate).toHaveBeenCalledWith('business', 'base-002')
+  })
+
   it('展示经营收入完成度与算力结构', () => {
     render(<BusinessInfoPage selectedBaseId="base-002" />)
     expect(screen.getByText('收入完成度')).toBeInTheDocument()
     expect(screen.getByText('算力结构')).toBeInTheDocument()
     expect(screen.getByText('预期剩余收入')).toBeInTheDocument()
+  })
+
+  it('展示 base-002 年度经营收入、完成率与剩余值', () => {
+    render(<BusinessInfoPage selectedBaseId="base-002" />)
+
+    expect(within(getMetricCard('年度预计收入')).getByText('9,000万元')).toBeInTheDocument()
+    expect(within(getMetricCard('年度已完成')).getByText('4,200万元')).toBeInTheDocument()
+    expect(within(getMetricCard('年度已完成')).getByText('收入完成度 46.7%')).toBeInTheDocument()
+    expect(within(getMetricCard('预期剩余收入')).getByText('4,800万元')).toBeInTheDocument()
+  })
+
+  it('算力结构仅堆叠自建与租赁并单独展示昇腾覆盖率', () => {
+    render(<BusinessInfoPage selectedBaseId="base-002" />)
+
+    const structure = screen.getByRole('img', {
+      name: '实际算力结构：自建 210P，租赁 130P，总计 340P',
+    })
+    expect(structure.children).toHaveLength(2)
+    expect(screen.getByRole('progressbar', { name: '昇腾覆盖实际算力' })).toHaveAttribute(
+      'aria-valuenow',
+      '76.47058823529412',
+    )
+    expect(screen.queryByText('600P')).not.toBeInTheDocument()
+  })
+
+  it('实际算力为零时昇腾覆盖率安全归零', () => {
+    render(<BusinessInfoPage selectedBaseId="base-004" />)
+
+    expect(screen.getByRole('progressbar', { name: '昇腾覆盖实际算力' })).toHaveAttribute(
+      'aria-valuenow',
+      '0',
+    )
   })
 
   it('展示 8 个经过计算的总览决策指标', () => {

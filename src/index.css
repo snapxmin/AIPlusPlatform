@@ -652,11 +652,6 @@ table.data-table tbody tr:hover {
   background: var(--cyan);
 }
 
-.computing-stack__ascend,
-.legend-dot--ascend {
-  background: var(--warning);
-}
-
 .computing-legend {
   display: flex;
   flex-wrap: wrap;
@@ -680,6 +675,50 @@ table.data-table tbody tr:hover {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+
+.ascend-coverage {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.ascend-coverage__heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 13px;
+}
+
+.ascend-coverage__heading div {
+  display: grid;
+  gap: 4px;
+}
+
+.ascend-coverage__heading span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.ascend-coverage__heading > strong {
+  color: var(--warning);
+  font-size: 18px;
+}
+
+.ascend-coverage__progress {
+  height: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: #edf1f6;
+  border-radius: 999px;
+}
+
+.ascend-coverage__progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--warning), #f3b44e);
+  border-radius: inherit;
 }
 
 .business-breakdowns {
