@@ -25,10 +25,17 @@ describe('dashboard pages', () => {
   it('可组合批复状态与行业筛选基地', () => {
     render(<BasicInfoPage onNavigate={vi.fn()} />)
     fireEvent.change(screen.getByRole('combobox', { name: '筛选批复状态' }), {
-      target: { value: '已批复' },
+      target: { value: '审核中' },
     })
     fireEvent.change(screen.getByRole('combobox', { name: '筛选行业' }), {
       target: { value: '智慧医疗' },
+    })
+
+    expect(screen.getByText('未找到符合条件的基地')).toBeInTheDocument()
+    expect(screen.queryByText('华南智慧医疗AI中试基地')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByRole('combobox', { name: '筛选批复状态' }), {
+      target: { value: '已批复' },
     })
 
     expect(screen.getByText('华南智慧医疗AI中试基地')).toBeInTheDocument()
