@@ -31,3 +31,10 @@ npm run test      # 运行测试
 npm run lint      # 静态检查
 npm run preview   # 预览生产构建
 ```
+
+## 发布到 GitHub Pages
+
+推送到 `main` 分支后，GitHub Actions 会自动构建并发布到 GitHub Pages。首次使用时，请在仓库的 **Settings → Pages** 中将 **Source** 设置为 **GitHub Actions**。
+
+发布地址：
+`https://snapxmin.github.io/AIPlusPlatform/`
