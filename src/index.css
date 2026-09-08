@@ -815,7 +815,13 @@ table.data-table tbody tr:hover {
   }
 
   .ranking-list__item {
-    grid-template-columns: 28px minmax(150px, 1fr) 54px;
+    grid-template-columns: 24px minmax(0, 1fr) 46px;
+    gap: 8px;
+  }
+
+  .ranking-list__item > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .ranking-list__item button {

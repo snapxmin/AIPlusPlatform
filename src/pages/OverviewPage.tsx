@@ -5,6 +5,7 @@ import { PageHeader } from '../components/PageHeader'
 import { baseBasicInfoList, baseBusinessInfoList } from '../data/mockData'
 import { formatComputingPower, formatWan } from '../utils/format'
 import type { PageKey } from '../nav'
+import { sortByCompletionRate } from './overviewModel'
 
 interface OverviewPageProps {
   onNavigate: (key: PageKey, baseId?: string) => void
@@ -57,7 +58,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
 
     return { base, business, completionRate }
   })
-  const rankingRows = [...baseRows].sort((a, b) => b.completionRate - a.completionRate)
+  const rankingRows = sortByCompletionRate(baseRows)
   const quarterValues = [1, 2, 3, 4].map((quarter) =>
     Math.round((totalExpectedRevenue * quarter) / 4),
   )
@@ -135,7 +136,14 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
           </div>
           <div className="chart-value">{formatWan(totalRevenueCompleted)}</div>
           <div className="chart-caption">目标 {formatWan(totalExpectedRevenue)}</div>
-          <div className="progress-track" role="progressbar" aria-label="年度收入目标完成进度">
+          <div
+            className="progress-track"
+            role="progressbar"
+            aria-label="年度收入目标完成进度"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={revenueRate}
+          >
             <span style={{ width: `${Math.min(revenueRate, 100)}%` }} />
           </div>
           <strong className="progress-label">{revenueRate.toFixed(1)}%</strong>
@@ -163,7 +171,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
             <polyline points={quarterPoints} />
             {quarterValues.map((value, index) => (
               <circle
-                key={value}
+                key={`quarter-${index + 1}`}
                 cx={24 + index * 78}
                 cy={104 - (value / quarterMax) * 76}
                 r="4"
