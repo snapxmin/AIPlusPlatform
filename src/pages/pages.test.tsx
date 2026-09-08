@@ -225,6 +225,35 @@ describe('dashboard pages', () => {
     expect(screen.queryByText('农业遥感监测')).not.toBeInTheDocument()
   })
 
+  it('活动标签页支持完整方向键和首尾键导航', () => {
+    render(<ActivitiesPage />)
+    const scenarioTab = screen.getByRole('tab', { name: '场景全景图' })
+    const platformTab = screen.getByRole('tab', { name: '中试平台' })
+    const ecosystemTab = screen.getByRole('tab', { name: '关键生态活动' })
+
+    expect(scenarioTab).toHaveAttribute('tabindex', '0')
+    expect(platformTab).toHaveAttribute('tabindex', '-1')
+    expect(ecosystemTab).toHaveAttribute('tabindex', '-1')
+
+    scenarioTab.focus()
+    fireEvent.keyDown(scenarioTab, { key: 'ArrowRight' })
+    expect(platformTab).toHaveFocus()
+    expect(platformTab).toHaveAttribute('aria-selected', 'true')
+    expect(platformTab).toHaveAttribute('tabindex', '0')
+
+    fireEvent.keyDown(platformTab, { key: 'End' })
+    expect(ecosystemTab).toHaveFocus()
+    expect(ecosystemTab).toHaveAttribute('aria-selected', 'true')
+
+    fireEvent.keyDown(ecosystemTab, { key: 'ArrowLeft' })
+    expect(platformTab).toHaveFocus()
+    expect(platformTab).toHaveAttribute('aria-selected', 'true')
+
+    fireEvent.keyDown(platformTab, { key: 'Home' })
+    expect(scenarioTab).toHaveFocus()
+    expect(scenarioTab).toHaveAttribute('aria-selected', 'true')
+  })
+
   it('按分类筛选动态资讯', () => {
     render(<NewsPage />)
     fireEvent.click(screen.getByRole('button', { name: '行业动态' }))
@@ -235,7 +264,8 @@ describe('dashboard pages', () => {
   it('以可访问资讯门户展示分类状态和文章', () => {
     const { container } = render(<NewsPage />)
     expect(screen.getByRole('button', { name: '全部' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getAllByRole('article')).toHaveLength(8)
+    const newsPortal = screen.getByRole('region', { name: '动态资讯' })
+    expect(within(newsPortal).getAllByRole('article')).toHaveLength(4)
     expect(container.querySelectorAll('.news-featured')).toHaveLength(1)
     expect(screen.getByText('2024年9月1日')).toBeInTheDocument()
   })

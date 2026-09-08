@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type KeyboardEvent } from 'react'
 import { MetricCard } from '../components/MetricCard'
 import { PageHeader } from '../components/PageHeader'
 import {
@@ -19,6 +19,32 @@ const sections: { id: ActivitySection; label: string }[] = [
 export function ActivitiesPage() {
   const [activeSection, setActiveSection] = useState<ActivitySection>('scenario')
   const [scenarioFilter, setScenarioFilter] = useState<'all' | 'key'>('all')
+
+  function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let nextIndex: number
+
+    switch (event.key) {
+      case 'ArrowRight':
+        nextIndex = (index + 1) % sections.length
+        break
+      case 'ArrowLeft':
+        nextIndex = (index - 1 + sections.length) % sections.length
+        break
+      case 'Home':
+        nextIndex = 0
+        break
+      case 'End':
+        nextIndex = sections.length - 1
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    setActiveSection(sections[nextIndex].id)
+    const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="tab"]')
+    tabs?.[nextIndex]?.focus()
+  }
 
   const visibleScenarios = useMemo(
     () =>
@@ -88,7 +114,7 @@ export function ActivitiesPage() {
       </div>
 
       <div className="section-tabs" role="tablist" aria-label="关键活动视图">
-        {sections.map((section) => (
+        {sections.map((section, index) => (
           <button
             key={section.id}
             id={`activity-tab-${section.id}`}
@@ -96,7 +122,9 @@ export function ActivitiesPage() {
             role="tab"
             aria-selected={activeSection === section.id}
             aria-controls="activity-panel"
+            tabIndex={activeSection === section.id ? 0 : -1}
             onClick={() => setActiveSection(section.id)}
+            onKeyDown={(event) => handleTabKeyDown(event, index)}
           >
             {section.label}
           </button>

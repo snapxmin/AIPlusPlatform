@@ -23,13 +23,19 @@ describe('App', () => {
     render(<App />)
     const overview = screen.getByRole('button', { name: '看板总览' })
     const basic = screen.getByRole('button', { name: '基础信息' })
+    const currentNavigationItems = () =>
+      screen
+        .getByRole('navigation')
+        .querySelectorAll('.app-nav button[aria-current="page"]')
 
     expect(overview).toHaveAttribute('aria-current', 'page')
     expect(basic).not.toHaveAttribute('aria-current')
+    expect(currentNavigationItems()).toHaveLength(1)
 
     fireEvent.click(basic)
     expect(overview).not.toHaveAttribute('aria-current')
     expect(basic).toHaveAttribute('aria-current', 'page')
+    expect(currentNavigationItems()).toHaveLength(1)
   })
 
   it('可以通过导航栏切换到基础信息页', () => {
