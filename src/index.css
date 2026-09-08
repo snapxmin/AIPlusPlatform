@@ -1,0 +1,283 @@
+:root {
+  color-scheme: light;
+  --color-bg: #f2f4f8;
+  --color-surface: #ffffff;
+  --color-primary: #c7000b;
+  --color-primary-dark: #93000a;
+  --color-text: #1f2430;
+  --color-text-muted: #616a7d;
+  --color-border: #e3e7ee;
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--color-primary-dark), #2a2f3d 60%);
+  color: #fff;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-brand {
+  padding: 0 20px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 12px;
+}
+
+.app-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.app-nav button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 12px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.app-nav button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.app-nav li.active button {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 600;
+  border-left: 3px solid #fff;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-x: auto;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  padding: 16px 20px;
+  box-shadow: 0 1px 2px rgba(20, 24, 33, 0.04);
+}
+
+.card + .card {
+  margin-top: 16px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  padding: 16px 18px;
+}
+
+.summary-card .label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.summary-card .value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table.data-table th,
+table.data-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+table.data-table th {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  background: #fafbfd;
+}
+
+table.data-table tbody tr:hover {
+  background: #fbf5f5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.status-已批复 {
+  background: #e3f7e9;
+  color: #1a9c4c;
+}
+
+.badge.status-审核中 {
+  background: #fff4e0;
+  color: #b8720b;
+}
+
+.badge.status-待申报 {
+  background: #eef1f8;
+  color: #616a7d;
+}
+
+.badge.status-未通过 {
+  background: #fdeaea;
+  color: #c7000b;
+}
+
+.badge.category {
+  background: #eef1f8;
+  color: #33415c;
+  margin: 2px 4px 2px 0;
+}
+
+.badge.benchmark {
+  background: #fdecec;
+  color: var(--color-primary);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  font-size: 13px;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.base-selector {
+  margin-bottom: 16px;
+}
+
+.base-selector select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  font-size: 13px;
+  min-width: 240px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.metric-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.metric-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--color-border);
+  font-size: 13px;
+}
+
+.metric-list li:last-child {
+  border-bottom: none;
+}
+
+.metric-list .label {
+  color: var(--color-text-muted);
+}
+
+.metric-list .value {
+  font-weight: 600;
+}
+
+.tag-row {
+  margin-top: 8px;
+}
+
+.news-item {
+  border-bottom: 1px solid var(--color-border);
+  padding: 12px 0;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
