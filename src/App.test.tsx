@@ -5,6 +5,9 @@ import App from './App'
 describe('App', () => {
   it('渲染看板总览页并展示基地统计信息', () => {
     render(<App />)
+    expect(screen.getByText('国家人工智能中试基地')).toBeInTheDocument()
+    expect(screen.getByText('经营决策驾驶舱')).toBeInTheDocument()
+    expect(screen.getByText('数据更新于')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: '看板总览' })).toBeInTheDocument()
     expect(screen.getByText('基地现状一览')).toBeInTheDocument()
     expect(screen.getByText('华东智能制造AI中试基地')).toBeInTheDocument()
