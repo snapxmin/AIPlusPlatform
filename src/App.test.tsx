@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
@@ -46,10 +46,22 @@ describe('App', () => {
 
   it('从总览页点击基地的经营信息链接可跳转并选中该基地', () => {
     render(<App />)
-    const businessLinks = screen.getAllByRole('button', { name: '查看经营信息' })
-    fireEvent.click(businessLinks[1])
+    const baseRow = screen.getByText('华南智慧医疗AI中试基地').closest('tr') as HTMLElement
+    fireEvent.click(within(baseRow).getByRole('button', { name: '查看经营信息' }))
     expect(screen.getByRole('combobox', { name: '选择基地' })).toHaveValue('base-002')
     expect(screen.getByText('医学影像三期建设项目')).toBeInTheDocument()
+  })
+
+  it('从总览页下钻基础信息时置顶并标记目标基地', () => {
+    render(<App />)
+    const baseRow = screen.getByText('华南智慧医疗AI中试基地').closest('tr') as HTMLElement
+
+    fireEvent.click(within(baseRow).getByRole('button', { name: '查看基础信息' }))
+
+    const firstBaseCard = screen.getAllByRole('article')[0]
+    expect(within(firstBaseCard).getByRole('heading', { name: '华南智慧医疗AI中试基地' }))
+      .toBeInTheDocument()
+    expect(within(firstBaseCard).getByText('目标基地')).toBeInTheDocument()
   })
 
   it('可以切换到三大关键活动与政策/行业动态页', () => {

@@ -336,6 +336,11 @@ table.data-table tbody tr:hover {
   color: var(--color-primary);
 }
 
+.badge.neutral {
+  background: #eef1f8;
+  color: #616a7d;
+}
+
 .link-button {
   background: none;
   border: none;

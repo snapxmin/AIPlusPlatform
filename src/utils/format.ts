@@ -4,7 +4,7 @@ import type { BaseBusinessInfo } from '../types'
  * 预期剩余收入 = 预计收入（年度） - 当年已完成收入
  */
 export function computeRemainingRevenueWan(business: BaseBusinessInfo): number {
-  return business.expectedRevenueAnnualWan - business.revenueCompleted.annualWan
+  return Math.max(0, business.expectedRevenueAnnualWan - business.revenueCompleted.annualWan)
 }
 
 /**

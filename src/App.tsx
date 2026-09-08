@@ -33,7 +33,9 @@ function App() {
         </div>
         <main className="app-main">
           {page === 'overview' && <OverviewPage onNavigate={handleNavigate} />}
-          {page === 'basic' && <BasicInfoPage onNavigate={handleNavigate} />}
+          {page === 'basic' && (
+            <BasicInfoPage onNavigate={handleNavigate} selectedBaseId={selectedBaseId} />
+          )}
           {page === 'business' && (
             <BusinessInfoPage key={selectedBaseId ?? 'default'} selectedBaseId={selectedBaseId} />
           )}

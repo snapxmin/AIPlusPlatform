@@ -132,8 +132,18 @@ export function BusinessInfoPage({ selectedBaseId }: BusinessInfoPageProps) {
             >
               {business.actualComputingPowerP > 0 && (
                 <>
-                  <span className="computing-stack__self" style={{ width: `${business.selfBuiltP / business.actualComputingPowerP * 100}%` }} />
-                  <span className="computing-stack__leased" style={{ width: `${business.leasedP / business.actualComputingPowerP * 100}%` }} />
+                  <span
+                    className="computing-stack__self"
+                    style={{
+                      width: `${((business.selfBuiltP / business.actualComputingPowerP) * 100).toFixed(1)}%`,
+                    }}
+                  />
+                  <span
+                    className="computing-stack__leased"
+                    style={{
+                      width: `${((business.leasedP / business.actualComputingPowerP) * 100).toFixed(1)}%`,
+                    }}
+                  />
                 </>
               )}
             </div>

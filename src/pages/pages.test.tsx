@@ -53,6 +53,23 @@ describe('dashboard pages', () => {
     expect(screen.getByText('未找到符合条件的基地')).toBeInTheDocument()
   })
 
+  it('将指定基地置顶并标记为目标基地', () => {
+    render(<BasicInfoPage onNavigate={vi.fn()} selectedBaseId="base-002" />)
+
+    const firstBaseCard = screen.getAllByRole('article')[0]
+    expect(within(firstBaseCard).getByRole('heading', { name: '华南智慧医疗AI中试基地' }))
+      .toBeInTheDocument()
+    expect(within(firstBaseCard).getByText('目标基地')).toBeInTheDocument()
+    expect(firstBaseCard).toHaveAttribute('aria-current', 'true')
+  })
+
+  it('为非标杆基地展示中性徽章', () => {
+    render(<BasicInfoPage onNavigate={vi.fn()} />)
+    const baseCard = screen.getByText('西南智慧农业AI中试基地').closest('article') as HTMLElement
+
+    expect(within(baseCard).getByText('非标杆')).toHaveClass('badge', 'neutral')
+  })
+
   it('从基础信息页下钻时传入当前基地 ID', () => {
     const onNavigate = vi.fn()
     render(<BasicInfoPage onNavigate={onNavigate} />)
@@ -86,6 +103,8 @@ describe('dashboard pages', () => {
       name: '实际算力结构：自建 210P，租赁 130P，总计 340P',
     })
     expect(structure.children).toHaveLength(2)
+    expect(structure.querySelector('.computing-stack__self')).toHaveStyle({ width: '61.8%' })
+    expect(structure.querySelector('.computing-stack__leased')).toHaveStyle({ width: '38.2%' })
     expect(screen.getByRole('progressbar', { name: '昇腾覆盖实际算力' })).toHaveAttribute(
       'aria-valuenow',
       '76.47058823529412',
@@ -170,7 +189,7 @@ describe('dashboard pages', () => {
     expect(within(baseRow).getByText('1.80亿元')).toBeInTheDocument()
     expect(within(baseRow).getByText('340P / 260P')).toBeInTheDocument()
     expect(within(baseRow).getByText('46.7%')).toBeInTheDocument()
-    fireEvent.click(screen.getAllByRole('button', { name: '查看基础信息' })[1])
+    fireEvent.click(within(baseRow).getByRole('button', { name: '查看基础信息' }))
     expect(onNavigate).toHaveBeenCalledWith('basic', 'base-002')
   })
 

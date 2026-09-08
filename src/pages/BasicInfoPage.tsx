@@ -7,23 +7,26 @@ import type { PageKey } from '../nav'
 
 interface BasicInfoPageProps {
   onNavigate: (key: PageKey, baseId?: string) => void
+  selectedBaseId?: string
 }
 
-export function BasicInfoPage({ onNavigate }: BasicInfoPageProps) {
+export function BasicInfoPage({ onNavigate, selectedBaseId }: BasicInfoPageProps) {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('全部状态')
   const [industry, setIndustry] = useState('全部行业')
 
   const statuses = [...new Set(baseBasicInfoList.map((base) => base.approvalStatus))]
   const industries = [...new Set(baseBasicInfoList.map((base) => base.industry))]
-  const visibleBases = baseBasicInfoList.filter((base) => {
-    const matchesQuery =
-      !query ||
-      [base.name, base.region, base.industry].some((value) => value.includes(query.trim()))
-    const matchesStatus = status === '全部状态' || base.approvalStatus === status
-    const matchesIndustry = industry === '全部行业' || base.industry === industry
-    return matchesQuery && matchesStatus && matchesIndustry
-  })
+  const visibleBases = baseBasicInfoList
+    .filter((base) => {
+      const matchesQuery =
+        !query ||
+        [base.name, base.region, base.industry].some((value) => value.includes(query.trim()))
+      const matchesStatus = status === '全部状态' || base.approvalStatus === status
+      const matchesIndustry = industry === '全部行业' || base.industry === industry
+      return matchesQuery && matchesStatus && matchesIndustry
+    })
+    .sort((a, b) => Number(b.id === selectedBaseId) - Number(a.id === selectedBaseId))
 
   return (
     <div>
@@ -45,13 +48,21 @@ export function BasicInfoPage({ onNavigate }: BasicInfoPageProps) {
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
-        <select aria-label="筛选批复状态" value={status} onChange={(event) => setStatus(event.target.value)}>
+        <select
+          aria-label="筛选批复状态"
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+        >
           <option>全部状态</option>
           {statuses.map((item) => (
             <option key={item}>{item}</option>
           ))}
         </select>
-        <select aria-label="筛选行业" value={industry} onChange={(event) => setIndustry(event.target.value)}>
+        <select
+          aria-label="筛选行业"
+          value={industry}
+          onChange={(event) => setIndustry(event.target.value)}
+        >
           <option>全部行业</option>
           {industries.map((item) => (
             <option key={item}>{item}</option>
@@ -62,7 +73,11 @@ export function BasicInfoPage({ onNavigate }: BasicInfoPageProps) {
 
       <div className="base-card-list">
         {visibleBases.map((base) => (
-          <article className="card base-info-card" key={base.id}>
+          <article
+            className="card base-info-card"
+            key={base.id}
+            aria-current={base.id === selectedBaseId ? 'true' : undefined}
+          >
             <header className="base-info-card__header">
               <div>
                 <div className="base-info-card__meta">
@@ -74,8 +89,17 @@ export function BasicInfoPage({ onNavigate }: BasicInfoPageProps) {
                 <p>{base.declarationDirection}</p>
               </div>
               <div className="base-info-card__badges">
-                {base.isHuaweiBenchmark && <span className="badge benchmark">{base.benchmarkLevel}</span>}
-            <span className={`badge status-${base.approvalStatus}`}>{base.approvalStatus}</span>
+                {base.id === selectedBaseId && (
+                  <span className="badge category">目标基地</span>
+                )}
+                {base.isHuaweiBenchmark ? (
+                  <span className="badge benchmark">{base.benchmarkLevel}</span>
+                ) : (
+                  <span className="badge neutral">非标杆</span>
+                )}
+                <span className={`badge status-${base.approvalStatus}`}>
+                  {base.approvalStatus}
+                </span>
               </div>
             </header>
 
@@ -103,35 +127,37 @@ export function BasicInfoPage({ onNavigate }: BasicInfoPageProps) {
               </section>
               <section className="base-info-section">
                 <h3>基地规模</h3>
-              <ul className="metric-list">
-                <li>
-                  <span className="label">建设金额</span>
-                  <span className="value">{formatWan(base.scale.constructionAmountWan)}</span>
-                </li>
-                <li>
-                  <span className="label">规划算力规模（总）</span>
-                  <span className="value">
-                    {formatComputingPower(base.scale.plannedComputingPowerP)}
-                  </span>
-                </li>
-                <li>
-                  <span className="label">规划自建规模</span>
-                  <span className="value">
-                    {formatComputingPower(base.scale.plannedSelfBuiltP)}
-                  </span>
-                </li>
-                <li>
-                  <span className="label">规划租赁规模</span>
-                  <span className="value">{formatComputingPower(base.scale.plannedLeasedP)}</span>
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="link-button"
-                onClick={() => onNavigate('business', base.id)}
-              >
-                查看昇腾规模及经营信息 →
-              </button>
+                <ul className="metric-list">
+                  <li>
+                    <span className="label">建设金额</span>
+                    <span className="value">{formatWan(base.scale.constructionAmountWan)}</span>
+                  </li>
+                  <li>
+                    <span className="label">规划算力规模（总）</span>
+                    <span className="value">
+                      {formatComputingPower(base.scale.plannedComputingPowerP)}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="label">规划自建规模</span>
+                    <span className="value">
+                      {formatComputingPower(base.scale.plannedSelfBuiltP)}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="label">规划租赁规模</span>
+                    <span className="value">
+                      {formatComputingPower(base.scale.plannedLeasedP)}
+                    </span>
+                  </li>
+                </ul>
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => onNavigate('business', base.id)}
+                >
+                  查看昇腾规模及经营信息 →
+                </button>
               </section>
             </div>
 
