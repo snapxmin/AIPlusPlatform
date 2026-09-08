@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { OverviewPage } from './OverviewPage'
-import { sortByCompletionRate } from './overviewModel'
+import { aggregateRegions, sortByCompletionRate } from './overviewModel'
 
 function getMetricCard(label: string) {
   return screen.getByText(label).closest('.metric-card') as HTMLElement
@@ -72,8 +72,27 @@ describe('dashboard pages', () => {
     expect(screen.getByRole('columnheader', { name: '建设金额' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: '实际/昇腾算力' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: '年度收入完成度' })).toBeInTheDocument()
+    const baseRow = screen.getByText('华南智慧医疗AI中试基地').closest('tr') as HTMLElement
+    expect(within(baseRow).getByText('1.80亿元')).toBeInTheDocument()
+    expect(within(baseRow).getByText('340P / 260P')).toBeInTheDocument()
+    expect(within(baseRow).getByText('46.7%')).toBeInTheDocument()
     fireEvent.click(screen.getAllByRole('button', { name: '查看基础信息' })[1])
     expect(onNavigate).toHaveBeenCalledWith('basic', 'base-002')
+  })
+
+  it('按大区聚合不同城市的基地数量', () => {
+    const bases = [
+      { region: '华南（深圳）' },
+      { region: '华东（上海）' },
+      { region: '华南（广州）' },
+      { region: '西南（成都）' },
+    ]
+
+    expect(aggregateRegions(bases)).toEqual([
+      ['华南', 2],
+      ['华东', 1],
+      ['西南', 1],
+    ])
   })
 
   it('为年度收入进度提供完整的无障碍数值', () => {

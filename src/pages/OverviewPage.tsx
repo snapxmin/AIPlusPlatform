@@ -5,7 +5,7 @@ import { PageHeader } from '../components/PageHeader'
 import { baseBasicInfoList, baseBusinessInfoList } from '../data/mockData'
 import { formatComputingPower, formatWan } from '../utils/format'
 import type { PageKey } from '../nav'
-import { sortByCompletionRate } from './overviewModel'
+import { aggregateRegions, sortByCompletionRate } from './overviewModel'
 
 interface OverviewPageProps {
   onNavigate: (key: PageKey, baseId?: string) => void
@@ -35,13 +35,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
   )
   const revenueRate =
     totalExpectedRevenue === 0 ? 0 : (totalRevenueCompleted / totalExpectedRevenue) * 100
-  const regionRows = Object.entries(
-    baseBasicInfoList.reduce<Record<string, number>>((acc, base) => {
-      const region = base.region.split('（')[0]
-      acc[region] = (acc[region] ?? 0) + 1
-      return acc
-    }, {}),
-  )
+  const regionRows = aggregateRegions(baseBasicInfoList)
   const maxRegionCount = Math.max(...regionRows.map(([, count]) => count), 1)
   const statusRows = Object.entries(
     baseBasicInfoList.reduce<Record<string, number>>((acc, base) => {
